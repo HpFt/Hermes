@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${db.host}/${db.name}
+    username: ${db.user}
+    password: ${db.pass}
+  jooq:
+    sql-dialect: POSTGRES

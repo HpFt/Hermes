@@ -1,0 +1,4 @@
+rootProject.name = 'hermes'
+
+include('service:backend')
+include('api:backend-api')

@@ -1,0 +1,61 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+}
+
+plugins {
+    id 'java'
+    id 'io.franzbecker.gradle-lombok' version '1.8' apply false
+    id 'io.spring.dependency-management' version '1.0.4.RELEASE' apply false
+    id 'org.springframework.boot' version '1.5.8.RELEASE' apply false
+}
+
+subprojects {
+    if (parent != rootProject) {
+        apply plugin: 'java'
+        apply plugin: 'io.franzbecker.gradle-lombok'
+        apply plugin: 'io.spring.dependency-management'
+
+        repositories {
+            jcenter()
+        }
+
+        compileJava.options.encoding = 'UTF-8'
+        compileTestJava.options.encoding = 'UTF-8'
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+
+        lombok {
+            version = '1.16.18'
+        }
+
+        ext {
+            springBootVersion = '1.5.8.RELEASE'
+        }
+
+        switch (parent.name) {
+            case 'api':
+            case 'lib':
+                apply from: 'http://nexus.dev.station.credit/repository/build-scripts/lib.gradle'
+                break
+            case 'service':
+                apply plugin: 'org.springframework.boot'
+                apply from: 'http://nexus.dev.station.credit/repository/build-scripts/app.gradle'
+                break
+        }
+
+        configurations {
+            compile.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+        }
+
+        dependencies {
+            compile "org.springframework.boot:spring-boot-starter-log4j2:${springBootVersion}"
+            compile 'com.google.guava:guava:20.0'
+            compile 'org.hibernate:hibernate-validator:5.3.5.Final'
+            compile 'io.springfox:springfox-swagger2:2.7.0'
+            compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+        }
+
+    }
+}

@@ -1,0 +1,5 @@
+db:
+  host: localhost
+  name: hermes
+  user: hermes
+  pass: hermes

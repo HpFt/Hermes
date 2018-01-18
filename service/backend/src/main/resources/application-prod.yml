@@ -1,0 +1,5 @@
+db:
+  host: hermes
+  name: hermes
+  user: ${DBUSER}
+  pass: ${DBPASS}

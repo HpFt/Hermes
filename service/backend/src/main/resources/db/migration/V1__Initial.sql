@@ -1,0 +1,8 @@
+-- CREATE SCHEMA core;
+
+CREATE TABLE users
+(
+  id      VARCHAR(36) PRIMARY KEY,
+  ip      VARCHAR(16)              NOT NULL,
+  created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
+);
