@@ -3,3 +3,5 @@ db:
   name: hermes
   user: hermes
   pass: hermes
+security:
+  apikey: hermes

@@ -1,4 +1,5 @@
 rootProject.name = 'hermes'
 
 include('service:backend')
-include('api:backend-api')
+include('api:user-api')
+include('lib:jsonutil')
