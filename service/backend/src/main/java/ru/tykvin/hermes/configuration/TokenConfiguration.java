@@ -1,4 +1,4 @@
-package ru.tykvin.hermes.configuration.token;
+package ru.tykvin.hermes.configuration;
 
 import lombok.Getter;
 import lombok.NonNull;

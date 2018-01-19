@@ -16,18 +16,19 @@ public class JsonUtils {
 
     private static final ObjectMapper OBJECT_MAPPER = createObjectMapper();
 
-    /**
-     * Создать преднастроенный {@link ObjectMapper}
-     */
-    public static ObjectMapper createObjectMapper() {
+    private static ObjectMapper createObjectMapper() {
         return new ObjectMapper()
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true)
                 .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-                .configure(MapperFeature.AUTO_DETECT_FIELDS, false)
-                .configure(MapperFeature.AUTO_DETECT_SETTERS, false)
+                .configure(MapperFeature.AUTO_DETECT_FIELDS, true)
+                .configure(MapperFeature.AUTO_DETECT_SETTERS, true)
                 .setSerializationInclusion(JsonInclude.Include.NON_ABSENT)
                 .registerModule(new Jdk8Module())
                 .registerModule(new JavaTimeModule());
+    }
+
+    public static ObjectMapper getObjectMapper() {
+        return OBJECT_MAPPER;
     }
 
     public static String pojoToString(@NonNull Object pojo) {

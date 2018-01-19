@@ -1,0 +1,148 @@
+ext {
+    jooqGeneratedSourcesDir = "${project.projectDir.getAbsolutePath()}/target/generated-sources/jooq"
+}
+
+println "${jooqGeneratedSourcesDir}"
+
+sourceSets.main.java.srcDirs += jooqGeneratedSourcesDir;
+
+buildscript {
+    repositories {
+
+        maven {
+            url "http://nexus.dev.station.credit/repository/release-group/"
+        }
+
+        dependencies {
+            //noinspection GroovyAssignabilityCheck
+            classpath 'org.jooq:jooq:3.9.6'
+            //noinspection GroovyAssignabilityCheck
+            classpath 'org.jooq:jooq-codegen:3.9.6'
+            //noinspection GroovyAssignabilityCheck
+            classpath 'org.postgresql:postgresql:9.4.1208'
+            //noinspection GroovyAssignabilityCheck
+            classpath 'org.flywaydb:flyway-core:3.2.1'
+            //noinspection GroovyAssignabilityCheck
+            classpath "ru.yandex.qatools.embed:postgresql-embedded:2.5"
+            //noinspection GroovyAssignabilityCheck
+            classpath files("src/main/resources/db/migration")
+        }
+    }
+}
+
+//noinspection GroovyAssignabilityCheck
+task jooq(type: JooqTask) {
+
+    doFirst {
+        delete jooqGeneratedSourcesDir
+    }
+    inputs.dir("${project.projectDir.getAbsolutePath()}/src/main/resources/db")
+    outputs.dir(jooqGeneratedSourcesDir)
+}
+
+//noinspection GroovyAssignabilityCheck
+task cleanJooqGeneratedSources(type: Delete) {
+    delete jooqGeneratedSourcesDir
+}
+
+compileJava.dependsOn jooq
+clean.dependsOn cleanJooqGeneratedSources
+
+import org.flywaydb.core.*;
+import org.jooq.util.jaxb.*;
+import org.jooq.util.*;
+import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
+import ru.yandex.qatools.embed.postgresql.distribution.Version
+
+import java.nio.file.Paths;
+import java.sql.Connection
+import java.sql.SQLException
+import java.sql.Statement;
+
+class JooqTask extends DefaultTask {
+
+    def EmbeddedPostgres postgres = new EmbeddedPostgres(Version.Main.V9_6);
+    def jdbc
+    def appName ="jooq"
+
+    @TaskAction
+    def generateSources() {
+        try {
+            startPostgres()
+            def dbSql = new File("${project.projectDir.getAbsolutePath()}/src/main/resources/db");
+            if (!dbSql.exists() || !dbSql.isDirectory()) {
+                println dbSql.getAbsolutePath() + ' not exists or not directory';
+                return;
+            }
+            generateJooqSources()
+        } finally {
+            stopPostgres()
+        }
+    }
+
+    def getRandomFreePort() {
+        def socket = new ServerSocket(0)
+        def result = socket.getLocalPort()
+        socket.close()
+        return result;
+    }
+
+
+    def startPostgres() {
+        println 'Starting postgres'
+        def port = getRandomFreePort()
+        def cachedRuntimeConfigDir = Paths.get(System.getProperty("java.io.tmpdir"))
+        println "cachedRuntimeConfigDir=$cachedRuntimeConfigDir";
+        postgres.start(EmbeddedPostgres.cachedRuntimeConfig(cachedRuntimeConfigDir),
+                "127.0.0.1", port, appName, appName, appName,
+                Arrays.asList(
+                        "-E", "SQL_ASCII",
+                        "--locale=C",
+                        "--lc-collate=C",
+                        "--lc-ctype=C"));
+
+        jdbc = "jdbc:postgresql://127.0.0.1:${port}/${appName}"
+
+        Flyway flyway = new Flyway();
+        flyway.setDataSource(jdbc, appName, appName);
+        flyway.setLocations("filesystem://${project.projectDir.getAbsolutePath()}/src/main/resources/db/migration")
+        flyway.migrate()
+    }
+
+    def stopPostgres() {
+        println 'Stopping postgres'
+        if (postgres != null) {
+            postgres.stop();
+        }
+    }
+
+
+    def generateJooqSources() {
+        println 'Generate JOOQ sources'
+
+        Configuration configuration = new Configuration()
+                .withJdbc(new Jdbc()
+                .withDriver('org.postgresql.Driver')
+                .withUrl(jdbc)
+                .withUser(appName)
+                .withPassword(appName))
+                .withGenerator(new Generator()
+                .withGenerate(new Generate()
+                .withJavaTimeTypes(true))
+                .withDatabase(new Database()
+                .withName('org.jooq.util.postgres.PostgresDatabase')
+                .withExcludes('migration_lock|schema_version|migration_version')
+                .withInputSchema('public')
+                .withForcedTypes([
+                new ForcedType()
+                        .withName('Integer')
+                        .withTypes('SMALLINT')
+        ]))
+                .withTarget(new Target()
+                .withPackageName("credit.station.jooq")
+                .withDirectory(project.ext.jooqGeneratedSourcesDir))
+        );
+        GenerationTool.generate(configuration);
+    }
+
+}

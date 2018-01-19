@@ -6,3 +6,10 @@ CREATE TABLE users
   ip      VARCHAR(16)              NOT NULL,
   created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
 );
+
+CREATE TABLE tokens
+(
+  token   VARCHAR PRIMARY KEY,
+  user_id VARCHAR(16)              NOT NULL,
+  created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
+);

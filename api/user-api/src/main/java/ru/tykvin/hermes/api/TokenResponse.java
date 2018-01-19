@@ -1,13 +1,17 @@
 package ru.tykvin.hermes.api;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NonNull;
-import ru.tykvin.hermes.model.TokenData;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
-@Data
+
+@Getter
+@ToString
+@RequiredArgsConstructor
 public class TokenResponse {
 
     @NonNull
-    private final TokenData jwtToken;
+    private final String token;
 
 }
