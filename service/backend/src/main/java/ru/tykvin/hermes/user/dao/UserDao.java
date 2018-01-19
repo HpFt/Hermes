@@ -1,13 +1,14 @@
 package ru.tykvin.hermes.user.dao;
 
+import credit.station.jooq.tables.records.UsersRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 import ru.tykvin.hermes.model.User;
 
+import java.util.Optional;
 import java.util.UUID;
 
-import static credit.station.jooq.tables.Tokens.TOKENS;
 import static credit.station.jooq.tables.Users.USERS;
 
 @Repository
@@ -15,22 +16,30 @@ import static credit.station.jooq.tables.Users.USERS;
 public class UserDao {
 
     private final DSLContext dslContext;
+    private final Mapper mapper;
 
-    public void createUser(User user) {
+    public User createUser(User user) {
         String userID = UUID.randomUUID().toString();
-        dslContext.insertInto(USERS)
+        UsersRecord record = dslContext.insertInto(USERS)
                 .columns(USERS.ID, USERS.IP)
                 .values(userID, user.getIp())
-                .execute();
+                .returning()
+                .fetchOne();
+        return mapper.mapToUser(record);
     }
 
+    public Optional<User> findUserByIp(String ip) {
+        return dslContext.selectFrom(USERS)
+                .where(USERS.IP.eq(ip))
+                .fetchOptional(mapper::mapToUser);
 
-    public void saveToken(User existsUser, String cipherToken) {
-        dslContext.insertInto(TOKENS)
-                .columns(TOKENS.TOKEN, TOKENS.USER_ID)
-                .values(cipherToken, existsUser.getId().toString())
-                .execute();
     }
 
+    public void updateUserIp(UUID id, String currentIp) {
+        dslContext.update(USERS)
+                .set(USERS.IP, currentIp)
+                .where(USERS.ID.eq(id.toString()))
+                .execute();
+    }
 }
 
