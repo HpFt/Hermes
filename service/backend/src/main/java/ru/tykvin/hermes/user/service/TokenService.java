@@ -5,7 +5,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.tykvin.hermes.configuration.TokenConfiguration;
+import ru.tykvin.hermes.configuration.ApiConfiguration;
 import ru.tykvin.hermes.lib.JsonUtils;
 import ru.tykvin.hermes.model.TokenData;
 import ru.tykvin.hermes.model.User;
@@ -23,7 +23,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class TokenService {
 
-    private final TokenConfiguration cfg;
+    private final ApiConfiguration cfg;
     private final UserDao userDao;
 
     @Transactional
@@ -51,9 +51,8 @@ public class TokenService {
     private String encrypt(TokenData token) {
         try {
             SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-            byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(cfg.getApikey());
+            byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(cfg.getSecret());
             Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
-
             return Jwts.builder()
                     .setPayload(JsonUtils.pojoToString(token))
                     .signWith(signatureAlgorithm, signingKey)
@@ -66,7 +65,7 @@ public class TokenService {
     private TokenData decrypt(String token) {
         try {
             Object json = Jwts.parser()
-                    .setSigningKey(DatatypeConverter.parseBase64Binary(cfg.getApikey()))
+                    .setSigningKey(DatatypeConverter.parseBase64Binary(cfg.getSecret()))
                     .parse(token).getBody();
             return JsonUtils.getObjectMapper().convertValue(json, TokenData.class);
         } catch (Exception e) {

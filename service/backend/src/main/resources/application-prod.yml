@@ -3,5 +3,5 @@ db:
   name: hermes
   user: ${DBUSER}
   pass: ${DBPASS}
-security:
-  apikey: ${APIKEY}
+api:
+  secret: ${APIKEY}

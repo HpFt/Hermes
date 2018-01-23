@@ -13,9 +13,8 @@ import org.springframework.context.annotation.PropertySource;
 @Setter
 @RequiredArgsConstructor
 @Configuration
-@ConfigurationProperties("security")
-public class TokenConfiguration {
-
-    private String apikey;
+@ConfigurationProperties("api")
+public class ApiConfiguration {
+    private String secret;
 
 }
