@@ -1,17 +1,17 @@
-package ru.tykvin.hermes.user.service;
+package ru.tykvin.hermes.auth.service;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.tykvin.hermes.configuration.ApiConfiguration;
+import ru.tykvin.hermes.auth.configuration.AuthConfiguration;
 import ru.tykvin.hermes.lib.JsonUtils;
 import ru.tykvin.hermes.model.TokenData;
 import ru.tykvin.hermes.model.User;
-import ru.tykvin.hermes.user.dao.UserDao;
-import ru.tykvin.hermes.user.exception.ClientFailureException;
-import ru.tykvin.hermes.user.exception.NeedUpdateTokenException;
+import ru.tykvin.hermes.auth.dao.AuthDao;
+import ru.tykvin.hermes.auth.exception.ClientFailureException;
+import ru.tykvin.hermes.auth.exception.NeedUpdateTokenException;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
@@ -23,25 +23,22 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class TokenService {
 
-    private final ApiConfiguration cfg;
-    private final UserDao userDao;
+    private final AuthConfiguration cfg;
+    private final AuthDao authDao;
 
     @Transactional
-    public String createToken(String ip) {
-        User user = userDao.findUserByIp(ip).orElse(createUser(ip));
+    public String signiIn(String ip) {
+        User user = authDao.findUserByIp(ip).orElseGet(() -> createUser(ip));
         return encrypt(new TokenData(user, LocalDateTime.now()));
     }
 
     public User createUser(String ip) {
-        return userDao.createUser(new User(UUID.randomUUID(), LocalDateTime.now(), ip));
+        return authDao.createUser(new User(UUID.randomUUID(), LocalDateTime.now(), ip));
     }
 
-    public void validateToken(String cipherToken, String currentIp) throws NeedUpdateTokenException {
-        TokenData tokenData = decrypt(cipherToken);
+    public boolean validateToken(TokenData tokenData, String currentIp) throws NeedUpdateTokenException {
         User user = tokenData.getUser();
-        if (!user.getIp().equals(currentIp)) {
-            throw new NeedUpdateTokenException();
-        }
+        return user.getIp().equals(currentIp);
     }
 
     public TokenData getToken(String cipher) {

@@ -1,4 +1,4 @@
-package ru.tykvin.hermes.user.dao;
+package ru.tykvin.hermes.auth.dao;
 
 import credit.station.jooq.tables.records.UsersRecord;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import static credit.station.jooq.tables.Users.USERS;
 
 @Repository
 @RequiredArgsConstructor
-public class UserDao {
+public class AuthDao {
 
     private final DSLContext dslContext;
     private final Mapper mapper;

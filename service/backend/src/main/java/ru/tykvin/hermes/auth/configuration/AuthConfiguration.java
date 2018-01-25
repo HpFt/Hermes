@@ -1,4 +1,4 @@
-package ru.tykvin.hermes.configuration;
+package ru.tykvin.hermes.auth.configuration;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -14,7 +14,7 @@ import org.springframework.context.annotation.PropertySource;
 @RequiredArgsConstructor
 @Configuration
 @ConfigurationProperties("api")
-public class ApiConfiguration {
+public class AuthConfiguration {
     private String secret;
 
 }
