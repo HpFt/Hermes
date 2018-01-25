@@ -6,8 +6,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import ru.tykvin.hermes.PostgresqlEmbeddedConfiguration;
 import ru.tykvin.hermes.lib.JsonUtils;
 import ru.tykvin.hermes.model.TokenData;
 
@@ -16,6 +18,7 @@ import javax.xml.bind.DatatypeConverter;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
+@Import(PostgresqlEmbeddedConfiguration.class)
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(locations = "classpath:test.properties")
