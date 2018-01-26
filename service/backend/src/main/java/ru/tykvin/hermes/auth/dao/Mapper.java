@@ -1,8 +1,8 @@
 package ru.tykvin.hermes.auth.dao;
 
-import credit.station.jooq.tables.records.UsersRecord;
 import org.springframework.stereotype.Component;
 import ru.tykvin.hermes.model.User;
+import ru.tykvin.hermes.tables.records.UsersRecord;
 
 import java.util.UUID;
 

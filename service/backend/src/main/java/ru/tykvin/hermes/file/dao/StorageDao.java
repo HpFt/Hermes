@@ -2,13 +2,13 @@ package ru.tykvin.hermes.file.dao;
 
 import ru.tykvin.hermes.model.User;
 
-import java.io.InputStream;
+import javax.servlet.http.HttpServletRequest;
 import java.io.OutputStream;
 import java.util.UUID;
 
 public interface StorageDao {
 
-    UUID save(User user, InputStream is);
+    UUID save(User user, HttpServletRequest file);
     OutputStream read(UUID fileId);
 
 }

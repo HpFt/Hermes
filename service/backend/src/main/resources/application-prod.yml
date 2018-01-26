@@ -5,3 +5,5 @@ db:
   pass: ${DBPASS}
 api:
   secret: ${APIKEY}
+storage:
+  root: ${ROOT}

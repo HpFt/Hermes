@@ -5,3 +5,5 @@ db:
   pass: hermes
 api:
   secret: hermes
+storage:
+  root: files

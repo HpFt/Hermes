@@ -3,7 +3,7 @@ apply from: "${rootProject.file('.')}/build-scripts/jooq.gradle"
 dependencies {
 
     compile "org.springframework.boot:spring-boot-starter-jooq:${springBootVersion}",
-            "org.springframework.boot:spring-boot-starter-security:${springBootVersion}"
+            "org.springframework.boot:spring-boot-configuration-processor:${springBootVersion}"
 
     compile 'org.springframework:spring-jdbc:4.3.12.RELEASE',
             'org.postgresql:postgresql:9.4.1212.jre7',

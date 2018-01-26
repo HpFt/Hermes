@@ -1,15 +1,15 @@
 package ru.tykvin.hermes.auth.dao;
 
-import credit.station.jooq.tables.records.UsersRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 import ru.tykvin.hermes.model.User;
+import ru.tykvin.hermes.tables.records.UsersRecord;
 
 import java.util.Optional;
 import java.util.UUID;
 
-import static credit.station.jooq.tables.Users.USERS;
+import static ru.tykvin.hermes.Tables.USERS;
 
 @Repository
 @RequiredArgsConstructor
@@ -35,11 +35,13 @@ public class AuthDao {
 
     }
 
-    public void updateUserIp(UUID id, String currentIp) {
-        dslContext.update(USERS)
+    public User updateUserIp(UUID id, String currentIp) {
+        UsersRecord record = dslContext.update(USERS)
                 .set(USERS.IP, currentIp)
                 .where(USERS.ID.eq(id.toString()))
-                .execute();
+                .returning()
+                .fetchOne();
+        return mapper.mapToUser(record);
     }
 }
 

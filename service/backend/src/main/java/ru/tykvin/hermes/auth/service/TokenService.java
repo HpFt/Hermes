@@ -27,12 +27,11 @@ public class TokenService {
     private final AuthDao authDao;
 
     @Transactional
-    public String signiIn(String ip) {
-        User user = authDao.findUserByIp(ip).orElseGet(() -> createUser(ip));
-        return encrypt(new TokenData(user, LocalDateTime.now()));
+    public User signiIn(String ip) {
+        return authDao.findUserByIp(ip).orElseGet(() -> createUser(ip));
     }
 
-    public User createUser(String ip) {
+    private User createUser(String ip) {
         return authDao.createUser(new User(UUID.randomUUID(), LocalDateTime.now(), ip));
     }
 
@@ -43,6 +42,14 @@ public class TokenService {
 
     public TokenData getToken(String cipher) {
         return decrypt(cipher);
+    }
+
+    public User updateUserIp(User user, String remoteAddr) {
+        return authDao.updateUserIp(user.getId(), remoteAddr);
+    }
+
+    public String createToken(User user) {
+        return encrypt(new TokenData(user));
     }
 
     private String encrypt(TokenData token) {
@@ -69,5 +76,4 @@ public class TokenService {
             throw new ClientFailureException(e.getMessage());
         }
     }
-
 }

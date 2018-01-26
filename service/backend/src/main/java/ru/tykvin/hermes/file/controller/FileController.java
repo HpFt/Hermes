@@ -2,12 +2,14 @@ package ru.tykvin.hermes.file.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.security.core.context.SecurityContext;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import ru.tykvin.hermes.file.dao.StorageDao;
-import ru.tykvin.hermes.model.User;
+import ru.tykvin.hermes.security.CurrentUserHolder;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,12 +19,12 @@ import javax.servlet.http.HttpServletRequest;
 public class FileController {
 
     private final StorageDao storageDao;
+    private final CurrentUserHolder userHolder;
 
-    @PostMapping("/save")
     @SneakyThrows
-    public void save(HttpServletRequest request, SecurityContext sc) {
-        Object user = sc.getAuthentication().getPrincipal();
-        storageDao.save((User) user, request.getInputStream());
+    @PostMapping(value = "/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void save(HttpServletRequest request) {
+        storageDao.save(userHolder.get(), request);
     }
 
 }
