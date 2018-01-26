@@ -1,4 +1,4 @@
-package ru.tykvin.hermes.file.dao;
+package ru.tykvin.hermes.file.storage;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -7,6 +7,7 @@ import org.apache.tomcat.util.http.fileupload.FileItemIterator;
 import org.apache.tomcat.util.http.fileupload.FileItemStream;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import ru.tykvin.hermes.file.configuration.StorageConfiguration;
 import ru.tykvin.hermes.model.User;
 
@@ -17,9 +18,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
-@Repository
+@Service
 @RequiredArgsConstructor
-public class FilesystemStorageDao implements StorageDao {
+public class FilesystemStorage implements Storage {
 
     private final StorageConfiguration sc;
 

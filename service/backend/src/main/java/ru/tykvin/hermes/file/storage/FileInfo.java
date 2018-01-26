@@ -1,19 +1,18 @@
-package ru.tykvin.hermes.model;
+package ru.tykvin.hermes.file.storage;
 
 import lombok.Data;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
 @RequiredArgsConstructor
-public class User {
-    @NonNull
+public class FileInfo {
     private final UUID id;
-    @NonNull
+    private final long size;
     private final LocalDateTime createAt;
-    @NonNull
-    private final String ip;
+    private final String sha256;
+    private final Path path;
 }
