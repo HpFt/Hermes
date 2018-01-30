@@ -13,4 +13,5 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties("storage")
 public class StorageConfiguration {
     private String root;
+    private String host;
 }
