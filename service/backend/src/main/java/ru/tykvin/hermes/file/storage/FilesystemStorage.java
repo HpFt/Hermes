@@ -1,5 +1,6 @@
 package ru.tykvin.hermes.file.storage;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -24,7 +25,6 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import ru.tykvin.hermes.auth.dao.Mapper;
 import ru.tykvin.hermes.file.configuration.StorageConfiguration;
 import ru.tykvin.hermes.file.dao.FilesDao;
 import ru.tykvin.hermes.file.dao.FilesMapper;
@@ -73,6 +73,7 @@ public class FilesystemStorage implements Storage {
                 LocalDateTime.now(),
                 result.getSha256(),
                 mapper.createUrl(path),
+                result.getFileName(),
                 path));
         } else {
             Files.delete(result.getPath());
@@ -82,8 +83,8 @@ public class FilesystemStorage implements Storage {
     }
 
     @Override
-    public OutputStream read(UUID fileId) {
-        return null;
+    public File read(UUID fileId) {
+        return Paths.get(sc.getRoot(), fileId.toString()).toFile();
     }
 
     @SneakyThrows
@@ -105,6 +106,13 @@ public class FilesystemStorage implements Storage {
             }
             hash = new BASE64Encoder().encode(digest.digest());
         }
-        return new FileInfo(fileId, count * bufferSize, LocalDateTime.now(), hash, "", tmpPath);
+        return new FileInfo(
+            fileId,
+            count * bufferSize,
+            LocalDateTime.now(),
+            hash,
+            "",
+            item.getName(),
+            tmpPath);
     }
 }

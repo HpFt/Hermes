@@ -17,6 +17,7 @@ public class FileInfo implements Comparable<FileInfo> {
     private final LocalDateTime createAt;
     private final String sha256;
     private final String url;
+    private final String fileName;
     @JsonIgnore
     private final Path path;
 

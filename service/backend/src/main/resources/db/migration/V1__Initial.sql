@@ -25,6 +25,7 @@ CREATE TABLE files_users
     CONSTRAINT files_users_users_id_fk
     REFERENCES users
     ON UPDATE CASCADE ON DELETE CASCADE,
+  file_name VARCHAR(512) NOT NULL,
   expiration TIMESTAMP WITH TIME ZONE NOT NULL,
   max_downloads BIGINT,
   create_at TIMESTAMP WITH TIME ZONE NOT NULL
@@ -33,3 +34,9 @@ CREATE TABLE files_users
 CREATE UNIQUE INDEX files_users_file_id_user_id_uindex
   ON files_users (file_id, user_id);
 
+
+CREATE VIEW v_file_info AS
+SELECT
+  f.id as fileId
+  
+FROM files f
