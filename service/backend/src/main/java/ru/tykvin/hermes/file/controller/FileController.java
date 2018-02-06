@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import ru.tykvin.hermes.file.storage.FileInfo;
+import ru.tykvin.hermes.file.model.DownloadingEntity;
 import ru.tykvin.hermes.file.storage.Storage;
 import ru.tykvin.hermes.security.CurrentUserHolder;
 
@@ -30,7 +30,7 @@ public class FileController {
 
     @SneakyThrows
     @PostMapping(value = "/api/file/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public List<FileInfo> save(HttpServletRequest request) {
+    public List<DownloadingEntity> save(HttpServletRequest request) {
         return storage.save(userHolder.get(), request);
     }
 

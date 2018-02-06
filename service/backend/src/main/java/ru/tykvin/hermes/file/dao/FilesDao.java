@@ -10,13 +10,16 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import ru.tykvin.hermes.file.storage.FileInfo;
+import ru.tykvin.hermes.file.model.FileInfo;
+import ru.tykvin.hermes.file.model.DownloadingEntity;
+import ru.tykvin.hermes.file.model.FilesMapper;
 import ru.tykvin.hermes.model.User;
 import ru.tykvin.hermes.tables.records.FilesRecord;
 import ru.tykvin.hermes.tables.records.FilesUsersRecord;
 
 import static ru.tykvin.hermes.Tables.FILES;
 import static ru.tykvin.hermes.Tables.FILES_USERS;
+import static ru.tykvin.hermes.Tables.V_FILE_INFO;
 
 @Repository
 @RequiredArgsConstructor
@@ -24,7 +27,15 @@ public class FilesDao {
     private final FilesMapper mapper;
     private final DSLContext dslContext;
 
-    public FileInfo createFile(FileInfo file) {
+    public FileInfo findFileInfo(UUID id) {
+        dslContext.selectFrom(V_FILE_INFO)
+                .where(V_FILE_INFO.ID.eq(id.toString()))
+                .fetchOptional(mapper::mapToFileInfo);
+    }
+
+
+
+    public DownloadingEntity createFile(DownloadingEntity file) {
         FilesRecord record = dslContext.insertInto(FILES)
             .columns(FILES.ID, FILES.HASH, FILES.PATH, FILES.CREATE_AT, FILES.SIZE)
             .values(
@@ -34,23 +45,23 @@ public class FilesDao {
                 file.getCreateAt(),
                 file.getSize()
             ).returning().fetchOne();
-        return mapper.mapToFileInfo(record);
+        return mapper.mapToDownloadingEntity(record);
     }
 
-    public Optional<FileInfo> findFileByHash(String hash) {
+    public Optional<DownloadingEntity> findFileByHash(String hash) {
         return dslContext.selectFrom(FILES)
             .where(FILES.HASH.eq(hash))
-            .fetchOptional(mapper::mapToFileInfo);
+            .fetchOptional(mapper::mapToDownloadingEntity);
     }
 
-    public Optional<FileInfo> findFileById(String id) {
+    public Optional<DownloadingEntity> findFileById(String id) {
         return dslContext.selectFrom(FILES)
             .where(FILES.ID.eq(id))
-            .fetchOptional(mapper::mapToFileInfo);
+            .fetchOptional(mapper::mapToDownloadingEntity);
     }
 
     @Transactional
-    public FileInfo bindToUser(User user, FileInfo result) {
+    public DownloadingEntity bindToUser(User user, DownloadingEntity result) {
         Optional<FilesUsersRecord> exists = dslContext.selectFrom(FILES_USERS)
             .where(
                 FILES_USERS.FILE_ID.eq(result.getId().toString()),
