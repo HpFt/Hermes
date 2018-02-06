@@ -1,6 +1,7 @@
 package ru.tykvin.hermes.file.model;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.tomcat.util.http.fileupload.FileItemStream;
@@ -14,10 +15,9 @@ import java.util.UUID;
 public class UploadingEntity {
     private final FileItemStream item;
     private final UUID id = UUID.randomUUID();
-    private final LocalDateTime created = LocalDateTime.now();
+    private final LocalDateTime creatAt = LocalDateTime.now();
     private long size;
     private String fileName;
     private String sha256;
-    private boolean tmp;
     private boolean uploaded;
 }

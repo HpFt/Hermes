@@ -22,15 +22,16 @@ public class FilesMapper {
 
     public DownloadingEntity mapToDownloadingEntity(FilesRecord record) {
         Path path = Paths.get(record.getPath());
-        return new DownloadingEntity(
-                UUID.fromString(record.getId()),
-                record.getSize(),
-                record.getCreateAt(),
-                record.getHash(),
-                createUrl(path),
-                "",
-                path
-        );
+        return null;
+//        return new DownloadingEntity(
+//                UUID.fromString(record.getId()),
+//                record.getSize(),
+//                record.getCreateAt(),
+//                record.getHash(),
+//                createUrl(path),
+//                "",
+//                path
+//        );
     }
 
     public String createUrl(String id) {

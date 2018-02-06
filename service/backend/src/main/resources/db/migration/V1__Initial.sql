@@ -10,8 +10,7 @@ CREATE TABLE files
   id        VARCHAR(36) PRIMARY KEY,
   size      BIGINT                   NOT NULL,
   create_at TIMESTAMP WITH TIME ZONE NOT NULL,
-  hash      VARCHAR(64)              NOT NULL,
-  path      TEXT                     NOT NULL
+  hash      VARCHAR(64)              NOT NULL
 );
 
 CREATE TABLE files_users
