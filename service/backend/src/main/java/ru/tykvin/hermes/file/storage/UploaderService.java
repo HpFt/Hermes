@@ -8,7 +8,6 @@ import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.springframework.stereotype.Service;
 import ru.tykvin.hermes.file.configuration.StorageConfiguration;
 import ru.tykvin.hermes.file.dao.FilesDao;
-import ru.tykvin.hermes.file.model.DownloadingEntity;
 import ru.tykvin.hermes.file.model.FileInfo;
 import ru.tykvin.hermes.file.model.FilesMapper;
 import ru.tykvin.hermes.file.model.FilesystemStorageFile;
@@ -17,7 +16,6 @@ import ru.tykvin.hermes.model.User;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,47 +38,29 @@ public class UploaderService {
         }
         ServletFileUpload fileUpload = new ServletFileUpload();
         FileItemIterator iterator = fileUpload.getItemIterator(request);
-        Map<String, UploadingEntity> hasHash = new HashMap<>();
-        List<UploadingEntity> hasntHash = new ArrayList<>();
+        List<UploadingEntity> uploaded = new ArrayList<>();
         while (iterator.hasNext()) {
             FileItemStream item = iterator.next();
-            if (!item.isFormField()) {
-                UploadingEntity preparation = mapper.mapToUploadingEntity(item);
-                if (preparation.getSha256() != null) {
-                    hasHash.putIfAbsent(preparation.getSha256(), preparation);
+            if (item.isFormField()) {
+                continue;
+            }
+            UploadingEntity entity = mapper.mapToUploadingEntity(item);
+            if (entity.getSha256() != null) {
+                if (filesDao.bindExistsToUser(entity, user)) {
+                    continue;
                 } else {
-                    hasntHash.add(preparation);
+                    // Тут логика по докачке файлов
                 }
             }
-        }
-        // Если клиент не передал hash для файлов - скачиваем и считаем, обновляем значения UpdateEntity
-        // Удаляем дубликаты, если они были скачены
-        hasntHash.stream().filter(e -> Objects.isNull(e.getSha256())).forEach(entity -> {
             upload(entity);
-            if (hasHash.get(entity.getSha256()) == null) {
-                hasHash.put(entity.getSha256(), entity);
-            } else {
-                storage.delete(hasHash.remove(entity.getSha256()));
+            if (filesDao.bindExistsToUser(entity, user)) {
+                storage.delete(entity);
+                continue;
             }
-        });
-        Collection<UploadingEntity> prepared = hasHash.values();
-        // Пытаемся найти дубликаты в системе и связать их с пользователем
-        List<UploadingEntity> existing = prepared
-                .stream()
-                .filter(entity -> filesDao.bindExistsToUser(entity, user))
-                .collect(Collectors.toList());
-
-        // Удаляем скаченные файлы, если удалось
-        storage.delete(existing);
-        prepared.removeAll(existing);
-
-        // Остались только оригинальные файлы. Докачем те, что еще остались
-        prepared.stream().filter(e -> !e.isUploaded()).forEach(this::upload);
-
-        //Сохраним информацию о файлах и свяжем их с пользователем
-        prepared.forEach(entity -> filesDao.createFile(entity, user));
-
-        return hasHash.values().stream().map(entity -> filesDao.findFileInfo(entity.getId()).orElse(null)).filter(Objects::nonNull).collect(Collectors.toList());
+            filesDao.createFile(entity, user);
+            uploaded.add(entity);
+        }
+        return uploaded.stream().map(entity -> filesDao.findFileInfo(entity.getId()).orElse(null)).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     private void upload(UploadingEntity entity) {

@@ -91,7 +91,6 @@ public class FilesDao {
         Optional<String> fileId = dslContext.selectFrom(FILES)
                 .where(FILES.HASH.eq(uploadingEntity.getSha256()))
                 .fetchOptional(FILES.ID);
-        fileId.ifPresent(s -> bindToUser(user, s));
-        return fileId.isPresent();
+        return fileId.map(id -> bindToUser(user, id)).isPresent();
     }
 }

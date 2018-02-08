@@ -20,4 +20,5 @@ public class UploadingEntity {
     private String fileName;
     private String sha256;
     private boolean uploaded;
+    private boolean tmp;
 }
