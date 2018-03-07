@@ -5,8 +5,6 @@ spring:
     password: ${db.pass}
   jooq:
     sql-dialect: POSTGRES
-  http:
-    multipart:
-      enabled: false
+  servlet.multipart.enabled: false
 server:
   port: 8080

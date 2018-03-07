@@ -11,7 +11,7 @@ import ru.tykvin.hermes.file.model.UploadingEntity;
 import ru.tykvin.hermes.model.User;
 import ru.tykvin.hermes.tables.records.FilesUsersRecord;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,6 +21,7 @@ import static ru.tykvin.hermes.Tables.FILES_USERS;
 import static ru.tykvin.hermes.Tables.V_FILE_INFO;
 
 @Repository
+@Transactional
 @RequiredArgsConstructor
 public class FilesDao {
     private final FilesMapper mapper;
@@ -32,8 +33,7 @@ public class FilesDao {
                 .fetchOptional(mapper::mapToFileInfo);
     }
 
-    @Transactional
-    public void createFile(UploadingEntity file, User user) {
+    public Optional<DownloadingEntity> createFile(UploadingEntity file, User user) {
         dslContext.insertInto(FILES)
                 .columns(FILES.ID, FILES.HASH, FILES.CREATE_AT, FILES.SIZE)
                 .values(
@@ -42,34 +42,34 @@ public class FilesDao {
                         file.getCreatAt(),
                         file.getSize()
                 ).execute();
-        bindToUser(user, file.getId().toString());
+        return bindToUser(user, file, file.getId().toString());
     }
 
     public Optional<DownloadingEntity> findFileByHash(String hash) {
-        return dslContext.selectFrom(FILES)
-                .where(FILES.HASH.eq(hash))
+        return dslContext.selectFrom(V_FILE_INFO)
+                .where(V_FILE_INFO.HASH.eq(hash))
                 .fetchOptional(mapper::mapToDownloadingEntity);
     }
 
     public Optional<DownloadingEntity> findFileById(String id) {
-        return dslContext.selectFrom(FILES)
-                .where(FILES.ID.eq(id))
+        return dslContext.selectFrom(V_FILE_INFO)
+                .where(V_FILE_INFO.FILEID.eq(id))
                 .fetchOptional(mapper::mapToDownloadingEntity);
     }
 
-    @Transactional
-    public DownloadingEntity bindToUser(User user, String id) {
+    public Optional<DownloadingEntity> bindToUser(User user, UploadingEntity file, String fid) {
         Optional<FilesUsersRecord> exists = dslContext.selectFrom(FILES_USERS)
                 .where(
-                        FILES_USERS.FILE_ID.eq(id),
+                        FILES_USERS.FILE_ID.eq(fid),
                         FILES_USERS.USER_ID.eq(user.getId().toString())
                 ).fetchOptional();
         if (exists.isPresent()) {
-            return findFileById(exists.get().getFileId()).orElse(null);
+            return findFileById(exists.get().getFileId());
         }
         String fileId = dslContext.insertInto(FILES_USERS)
                 .columns(
                         FILES_USERS.ID,
+                        FILES_USERS.FILE_NAME,
                         FILES_USERS.USER_ID,
                         FILES_USERS.FILE_ID,
                         FILES_USERS.CREATE_AT,
@@ -77,20 +77,20 @@ public class FilesDao {
                         FILES_USERS.MAX_DOWNLOADS)
                 .values(
                         UUID.randomUUID().toString(),
+                        file.getFileName(),
                         user.getId().toString(),
-                        id,
-                        LocalDateTime.now(),
-                        LocalDateTime.now().plus(30, ChronoUnit.DAYS),
+                        fid,
+                        OffsetDateTime.now(),
+                        OffsetDateTime.now().plus(30, ChronoUnit.DAYS),
                         -1L)
                 .returning().fetchOne().get(FILES_USERS.FILE_ID);
-        return findFileById(fileId).orElse(null);
+        return findFileById(fileId);
     }
 
-    @Transactional
-    public boolean bindExistsToUser(UploadingEntity uploadingEntity, User user) {
+    public Optional<DownloadingEntity> bindExistsToUser(UploadingEntity uploadingEntity, User user) {
         Optional<String> fileId = dslContext.selectFrom(FILES)
                 .where(FILES.HASH.eq(uploadingEntity.getSha256()))
                 .fetchOptional(FILES.ID);
-        return fileId.map(id -> bindToUser(user, id)).isPresent();
+        return fileId.map(id -> bindToUser(user, uploadingEntity, id).orElse(null));
     }
 }

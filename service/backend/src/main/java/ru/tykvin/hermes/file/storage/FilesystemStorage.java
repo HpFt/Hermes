@@ -30,17 +30,15 @@ public class FilesystemStorage implements Storage {
     private final FilesDao filesDao;
     private final FilesMapper mapper;
 
-
     public File read(UUID fileId) {
-        return Paths.get(sc.getRoot(), fileId.toString()).toFile();
+        return resolveFile(fileId.toString()).toFile();
     }
 
     @Override
     @SneakyThrows
     public FilesystemStorageFile write(UploadingEntity uploadingEntity) {
         String name = uploadingEntity.getId().toString();
-        Path root = Paths.get(sc.getRoot());
-        Path tmpPath = root.resolve(name + ".uploading");
+        Path tmpPath = resolveFile(name + ".uploading");
         FileUtils.touch(tmpPath.toFile());
         try (InputStream is = uploadingEntity.getItem().openStream(); OutputStream os = Files.newOutputStream(tmpPath)) {
             long count = 0;
@@ -55,7 +53,7 @@ public class FilesystemStorage implements Storage {
                 count += n;
             }
             hash = new BASE64Encoder().encode(digest.digest());
-            return new FilesystemStorageFile(Files.copy(tmpPath, root.resolve(name)), count * bufferSize, hash);
+            return new FilesystemStorageFile(Files.move(tmpPath, resolveFile(name)), count * bufferSize, hash);
         }
     }
 
@@ -64,12 +62,16 @@ public class FilesystemStorage implements Storage {
         existing.stream().filter(UploadingEntity::isUploaded).map(e -> e.getId().toString()).map(Paths::get).forEach(this::delete);
     }
 
+    public void delete(UploadingEntity entity) {
+        delete(resolveFile(entity.getId().toString()));
+    }
+
     @SneakyThrows
     private void delete(Path path) {
         Files.deleteIfExists(path);
     }
 
-    public void delete(UploadingEntity entity) {
-        delete(Paths.get(entity.getId().toString()));
+    private Path resolveFile(String name) {
+        return Paths.get(sc.getRoot()).resolve(Paths.get(name));
     }
 }

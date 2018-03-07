@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Data
@@ -12,7 +13,6 @@ import java.util.UUID;
 public class DownloadingEntity {
     private final UUID id;
     private final long size;
-    private final LocalDateTime createAt;
-    private final String url;
+    private final OffsetDateTime createAt;
     private final String fileName;
 }

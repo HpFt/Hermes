@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 import ru.tykvin.hermes.file.model.FileInfo;
 import ru.tykvin.hermes.file.storage.UploaderService;
 import ru.tykvin.hermes.security.CurrentUserHolder;

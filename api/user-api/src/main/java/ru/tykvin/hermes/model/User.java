@@ -5,6 +5,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Data
@@ -13,7 +14,7 @@ public class User {
     @NonNull
     private final UUID id;
     @NonNull
-    private final LocalDateTime createAt;
+    private final OffsetDateTime createAt;
     @NonNull
     private final String ip;
 }

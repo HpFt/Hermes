@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.tomcat.util.http.fileupload.FileItemStream;
 
+import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Builder
@@ -15,7 +17,7 @@ import java.util.UUID;
 public class UploadingEntity {
     private final FileItemStream item;
     private final UUID id = UUID.randomUUID();
-    private final LocalDateTime creatAt = LocalDateTime.now();
+    private final OffsetDateTime creatAt = OffsetDateTime.now();
     private long size;
     private String fileName;
     private String sha256;

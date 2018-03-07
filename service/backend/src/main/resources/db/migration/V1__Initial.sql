@@ -40,6 +40,7 @@ CREATE VIEW v_file_info AS
     fu.expiration AS expiration,
     f.id          AS fileId,
     u.id          AS userId,
+    f.hash        AS hash,
     f.size        AS size
   FROM files f
     JOIN files_users fu ON f.id = fu.file_id

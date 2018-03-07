@@ -17,6 +17,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Service
@@ -32,7 +33,7 @@ public class TokenService {
     }
 
     private User createUser(String ip) {
-        return authDao.createUser(new User(UUID.randomUUID(), LocalDateTime.now(), ip));
+        return authDao.createUser(new User(UUID.randomUUID(), OffsetDateTime.now(), ip));
     }
 
     public boolean validateToken(TokenData tokenData, String currentIp) throws NeedUpdateTokenException {

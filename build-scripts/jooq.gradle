@@ -12,16 +12,15 @@ buildscript {
         repositories {
             jcenter()
         }
-
         dependencies {
             //noinspection GroovyAssignabilityCheck
-            classpath 'org.jooq:jooq:3.9.6'
+            classpath 'org.jooq:jooq:3.10.5'
             //noinspection GroovyAssignabilityCheck
-            classpath 'org.jooq:jooq-codegen:3.9.6'
+            classpath 'org.jooq:jooq-codegen:3.10.5'
             //noinspection GroovyAssignabilityCheck
             classpath 'org.postgresql:postgresql:9.4.1208'
             //noinspection GroovyAssignabilityCheck
-            classpath 'org.flywaydb:flyway-core:3.2.1'
+            classpath 'org.flywaydb:flyway-core:5.0.7'
             //noinspection GroovyAssignabilityCheck
             classpath "ru.yandex.qatools.embed:postgresql-embedded:2.5"
             //noinspection GroovyAssignabilityCheck
