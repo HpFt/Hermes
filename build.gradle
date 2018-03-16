@@ -1,3 +1,4 @@
+
 buildscript {
     repositories {
         jcenter()
@@ -6,43 +7,52 @@ buildscript {
 
 plugins {
     id 'java'
-    id 'io.franzbecker.gradle-lombok' version '1.8' apply false
+    id 'application'
+    id 'io.franzbecker.gradle-lombok' version '1.11' apply false
     id 'org.springframework.boot' version '2.0.0.RELEASE' apply false
 }
 
-subprojects {
-    if (parent != rootProject) {
-        apply plugin: 'java'
-        apply plugin: 'io.franzbecker.gradle-lombok'
-        apply plugin: 'io.spring.dependency-management'
-        apply plugin: 'org.springframework.boot'
-        
-        repositories {
-            jcenter()
-        }
+apply from: "${rootProject.file('.')}/build-scripts/jooq.gradle"
 
-        compileJava.options.encoding = 'UTF-8'
-        compileTestJava.options.encoding = 'UTF-8'
-        sourceCompatibility = '1.8'
-        targetCompatibility = '1.8'
+apply plugin: 'java'
+apply plugin: 'io.franzbecker.gradle-lombok'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'org.springframework.boot'
 
-        lombok {
-            version = '1.16.18'
-        }
+repositories {
+    jcenter()
+}
 
-        dependencies {
-            compile 'com.google.guava:guava:20.0'
-            compile 'org.hibernate:hibernate-validator:5.3.5.Final'
-            compile 'io.springfox:springfox-swagger2:2.7.0'
+lombok {
+    version = "1.16.20"
+}
 
-            compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+mainClassName = 'ru.tykvin.hermes.HermesServerApplication'
+dependencies {
+    compile 'com.google.guava:guava:20.0'
+    compile 'org.hibernate:hibernate-validator:5.3.5.Final'
+    compile 'io.springfox:springfox-swagger2:2.7.0'
 
-            testCompile "org.springframework.boot:spring-boot-starter-test",
-                    'ru.yandex.qatools.embed:postgresql-embedded:2.5',
-                    'org.hamcrest:hamcrest-junit:2.0.0.0',
-                    'org.skyscreamer:jsonassert:1.5.0',
-                    project(':lib:jsonutil')
-        }
+    compile "org.springframework.boot:spring-boot-starter-jooq",
+            "org.springframework.boot:spring-boot-configuration-processor",
+            "org.springframework.boot:spring-boot-starter-thymeleaf",
+            "org.springframework.boot:spring-boot-starter-web",
+            "org.springframework.boot:spring-boot-starter-actuator"
 
-    }
+    compile 'org.springframework:spring-jdbc:4.3.12.RELEASE',
+            'org.postgresql:postgresql:9.4.1212.jre7',
+            'org.flywaydb:flyway-core:3.2.1'
+
+    compile 'commons-io:commons-io:2.6', 'io.jsonwebtoken:jjwt:0.9.0'
+
+    compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+
+    testCompile "org.springframework.boot:spring-boot-starter-test",
+            'ru.yandex.qatools.embed:postgresql-embedded:2.5',
+            'org.hamcrest:hamcrest-junit:2.0.0.0',
+            'org.skyscreamer:jsonassert:1.5.0'
 }

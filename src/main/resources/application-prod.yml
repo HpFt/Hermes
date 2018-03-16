@@ -1,0 +1,11 @@
+db:
+  host: postgres
+  name: hermes
+  user: postgres
+  pass: postgres
+api:
+  secret: apikey
+storage:
+  root: ./files
+  host: ${host}
+  lifeTime: ${life_time}

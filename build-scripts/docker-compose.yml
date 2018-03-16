@@ -1,0 +1,23 @@
+version: '3.3'
+services:
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    restart: always
+    volumes:
+      - "./data/:/var/lib/postgresql/data"
+  hermes:
+    image: happyfat25/hermes
+    restart: always
+    ports:
+      - 80:8080
+    volumes:
+      - "./files/:/app/hermes/files"
+    links:
+      - postgres
+    env_file:
+      - hermes.properties
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod,default
+
