@@ -1,11 +1,18 @@
 sudo: required
 language: java
+
+services:
+  - docker
+
 jdk:
   - oraclejdk8
 script:
-  - gradle build
+  - gradle clean build
+
+
 deploy:
   provider: script
-  script: bash docker_push
+  before_script: cd build-scripts
+  script: bash publish.sh
   on:
-    branch: master
+    branch: develop

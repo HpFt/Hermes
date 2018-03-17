@@ -10,6 +10,7 @@
 Вручную приложение можно запустить везде где есть **docker**
 
 Для управления деплоем сервиса и работы с ним понадобиться скрипт:
+```bash
 # curl -L curl -L https://raw.githubusercontent.com/pTykvin/Hermes/master/build-scripts/tools.sh?cache=`date +%s` -o tools.sh
 ```
 
