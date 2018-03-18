@@ -10,10 +10,6 @@ script:
   - gradle clean build
 
 
-prepare_deploy:
-  provider: script
-  script: bash cp -rf ../build/libs/Hermes.jar build-scripts/app.jar
-
 deploy:
   provider: script
   before_script: cd build-scripts
