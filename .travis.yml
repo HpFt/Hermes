@@ -8,5 +8,11 @@ jdk:
   - oraclejdk8
 script:
   - gradle clean build
-after_success:
-  - cd build-scripts && ./publish.sh
+
+deploy:
+  provider: script
+  skip_cleanup: true
+  before_script: cd build-scripts
+  script: bash publish.sh
+  on:
+    branch: develop
