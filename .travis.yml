@@ -12,7 +12,7 @@ script:
 
 prepare_deploy:
   provider: script
-  script bash cp -rf ../build/libs/Hermes.jar build-scripts/app.jar
+  script: bash cp -rf ../build/libs/Hermes.jar build-scripts/app.jar
 
 deploy:
   provider: script
