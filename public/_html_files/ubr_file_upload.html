@@ -1,0 +1,149 @@
+<!-- saved from url=(0033)http://hermes/ubr_file_upload.php -->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+
+    <meta http-equiv="expires" content="-1">
+    <meta name="robots" content="index,nofollow">
+    <!-- Please do not remove this tag: Uber-Uploader Ver 6.8.2 http://uber-uploader.sourceforge.net -->
+    <link rel="stylesheet" type="text/css" href="./ubr.css">
+    <script language="JavaScript" type="text/javascript" src="./jquery-1.3.2.min.js"></script>
+    <script language="JavaScript" type="text/javascript" src="./jquery.blockUI.js"></script>
+    <script language="JavaScript" type="text/javascript" src="./ubr_file_upload.js"></script>
+    <script language="JavaScript" type="text/javascript">
+
+        var JQ = jQuery.noConflict();
+
+        UberUpload.path_to_link_script = "ubr_link_upload.php";
+        UberUpload.path_to_set_progress_script = "ubr_set_progress.php";
+        UberUpload.path_to_get_progress_script = "ubr_get_progress.php";
+        UberUpload.path_to_upload_script = "/cgi-bin/ubr_upload.pl";
+        UberUpload.check_allow_extensions_on_client = 0;
+        UberUpload.check_disallow_extensions_on_client = 1;
+        UberUpload.disallow_extensions = /(sh|php|php3|php4|php5|py|shtml|stm|shtm|phtml|html|htm|js|jsp|asp|aspx|cgi|pl|plx|htaccess|htpasswd)$/i;
+        UberUpload.check_file_name_format = 0;
+        UberUpload.check_null_file_count = 1;
+        UberUpload.check_duplicate_file_count = 1;
+        UberUpload.max_upload_slots = 5;
+        UberUpload.cedric_progress_bar = 1;
+        UberUpload.cedric_hold_to_sync = 0;
+        UberUpload.bucket_progress_bar = 0;
+        UberUpload.progress_bar_width = 498;
+        UberUpload.show_percent_complete = 1;
+        UberUpload.block_ui_enabled = 1;
+        UberUpload.show_files_uploaded = 1;
+        UberUpload.show_current_position = 1;
+        UberUpload.show_current_file = 0;
+        UberUpload.show_elapsed_time = 1;
+        UberUpload.show_est_time_left = 1;
+        UberUpload.show_est_speed = 1;
+        JQ(document).ready(function () {
+            UberUpload.resetFileUploadPage();
+            JQ("#reset_button").bind("click", function (e) {
+                UberUpload.resetFileUploadPage();
+            });
+            JQ("#progress_bar_background").css("width", UberUpload.progress_bar_width);
+        });
+    </script>
+</head>
+<body marginwidth="0">
+<table width="100%" height="241px" ;="">
+    <tbody>
+    <tr>
+        <td width="33%"><img src="./banner.jpg" style="padding-bottom: 20px;"></td>
+        <td>
+            <center>
+                <div id="main_container">
+                    <div id="ubr_alert"></div>
+
+                    <!-- Progress Bar -->
+                    <div id="progress_bar_container" style="display: none;">
+                        <div id="upload_stats_toggle">&nbsp;</div>
+                        <div id="progress_bar_background" style="width: 498px;">
+                            <div id="progress_bar" style="width: 0px;"></div>
+                        </div>
+                        <div id="percent_complete">0%</div>
+                    </div>
+
+                    <!-- Upload Stats -->
+                    <div id="upload_stats_container" style="display: none;">
+                        <div class="upload_stats_label">&nbsp;Файл:&nbsp;</div>
+                        <div class="upload_stats_data"><span id="files_uploaded">0</span> of <span
+                                id="total_uploads">0</span></div>
+                        <div class="upload_stats_label">&nbsp;Передано:&nbsp;</div>
+                        <div class="upload_stats_data"><span id="current_position">0</span> / <span
+                                id="total_kbytes">0</span> KBytes
+                        </div>
+                        <div class="upload_stats_label">&nbsp;Прошло времени:&nbsp;</div>
+                        <div class="upload_stats_data"><span id="elapsed_time">00:00:00</span></div>
+                        <div class="upload_stats_label">&nbsp;Осталось времени:&nbsp;</div>
+                        <div class="upload_stats_data"><span id="est_time_left">00:00:00</span></div>
+                        <div class="upload_stats_label">&nbsp;Скорость:&nbsp;</div>
+                        <div class="upload_stats_data"><span id="est_speed">0</span> KB/s.</div>
+                    </div>
+                    <!-- Container for upload iframe -->
+                    <div align="center" id="upload_container" style="display: none;"></div>
+
+                    <!-- Start Upload Form -->
+                    <form id="ubr_upload_form" name="ubr_upload_form" method="post" enctype="multipart/form-data"
+                          action="http://hermes/ubr_file_upload.php#" onsubmit="return UberUpload.linkUpload();">
+                        <noscript>&lt;span class="ubrError"&gt;Ошибка&lt;/span&gt;: Javascript должен быть включен для
+                            работы сервиса.&lt;br&gt;&lt;br&gt;
+                        </noscript>
+                        <div id="file_picker_container"><input type="file" class="upfile upfile_ultimo upfile_ultimo"
+                                                               name="upfile_1521454998152" id="upfile_1521454998152"
+                                                               size="35" value=""><input type="file" class="upfile"
+                                                                                         name="upfile_1521454993721"
+                                                                                         id="upfile_1521454993721"
+                                                                                         size="35" value=""
+                                                                                         style="display: none;"><input
+                                type="file" class="upfile" name="upfile_1521454952524" id="upfile_1521454952524"
+                                size="35" value="" style="display: none;"></div>
+                        <center>
+                            <div id="upload_slots_container" style="display: block;">
+                                <div class=" upfile_label " id="upfile_1521454952524_label"><span class="upfile_name">Scanitto_07.02.2018 11-12-21.jpg</span><span
+                                        class="upfile_remove" title="Удалить из списка"
+                                        onclick="UberUpload.deleteUploadSlot(&#39;upfile_1521454952524&#39;)"><!--[x]--></span>
+                                </div>
+                                <div class=" upfile_label " id="upfile_1521454993721_label"><span class="upfile_name">Scanitto_07.02.2018 11-14-02 (2).jpg</span><span
+                                        class="upfile_remove" title="Удалить из списка"
+                                        onclick="UberUpload.deleteUploadSlot(&#39;upfile_1521454993721&#39;)"><!--[x]--></span>
+                                </div>
+                            </div>
+                        </center>
+                        <div id="upload_form_values_container">
+                            <!-- Add Your Form Values Here -->
+                        </div>
+                        <div id="upload_buttons_container"><input type="button" id="reset_button" name="reset_button"
+                                                                  value="Очистить">&nbsp;&nbsp;&nbsp;<input
+                                type="submit" id="upload_button" name="upload_button" value="Передать"><br> <input
+                                id="how" type="button" onclick="UberUpload.showHelpMess();"
+                                value="Условия использования сервиса"></div>
+                    </form>
+                </div>
+            </center>
+        </td>
+        <td width="33%" align="right">
+            <div id="menu" class="menu">
+                <a class="enum" id="files" href="/ubr_file_upload.php" target="main">
+                    <center><img src="./installer.png" border="0"><br>Ваши файлы</center>
+                </a>
+                <a class="enum" id="about" href="/about.php" target="main">
+                    <center><img src="./lights off.png" border="0"><br>О сервисе</center>
+                </a>
+                <!--				<div class = "enum" id = "forum" onClick = "window.parent.main.location.href = 'forum.php'">
+                                    Высказаться
+                                </div>
+                                <div class = "enum" id = "votes" onClick = "window.parent.main.location.href = 'votes.php'">
+                                    Голосования
+                                </div>-->
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<table>
+
+</table>
+</body>
+</html>

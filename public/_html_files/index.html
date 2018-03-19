@@ -1,0 +1,88 @@
+<!-- saved from url=(0023)http://hermes/index.php -->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+
+    <link href="./main.css" style="text/css" rel="stylesheet">
+    <script language="JavaScript" type="text/javascript" src="./jquery-1.5.min.js"></script>
+</head>
+<body marginwidth="0">
+<table width="100%">
+    <tbody>
+    <tr>
+        <td width="33%"></td>
+        <td width="33%">
+            <center>
+                <input type="button" value="Список файлов" onclick="db_list();" class="btn-slide" id="btn-slide">
+            </center>
+        </td>
+        <td width="33%"></td>
+    </tr>
+    </tbody>
+</table>
+<script type="text/javascript">
+
+    var xmlHttp = false;
+    try {
+        xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
+    } catch (e) {
+        try {
+            xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+        } catch (e2) {
+            xmlHttp = false;
+        }
+    }
+
+    if (!xmlHttp && typeof XMLHttpRequest != 'undefined') {
+        xmlHttp = new XMLHttpRequest();
+    }
+
+
+    function db_check(x, check_) {
+        //alert (x);
+        //alert (check_);
+        var url = "set_prop.php?f_delafter=" + check_ + "&i_d=" + x + "&table=files&key=f_id";
+        //alert(url);
+        xmlHttp.open("GET", url, true);
+        //document.getElementById('test').value = url;
+        //xmlHttp.onreadystatechange = updatePage;
+        xmlHttp.send(null);
+    };
+    window.show_hide_list = 1;
+
+    function db_list() {
+        window.show_hide_list = (window.show_hide_list - 1) * -1;
+        var url = "set_prop.php?s_d_show_hide_list=" + window.show_hide_list + "&i_d=" + 489847129 + "&table=settings&key=s_Key";
+        xmlHttp.open("GET", url, true);
+        //document.getElementById('test').value = url;
+        //xmlHttp.onreadystatechange = updatePage;
+        xmlHttp.send(null);
+    };
+
+    function updatePage() {
+        if (xmlHttp.readyState == 4) {
+            var response = xmlHttp.responseText;
+            document.getElementById("test").value = response;
+        }
+    }
+
+    $(document).ready(function () {
+        $("#panel").slideToggle("fast");
+        $(this).toggleClass("active");
+        $(".btn-slide").click(function () {
+            $("#admin").fadeOut("fast");
+            $("#panel").slideToggle("slow");
+            $(this).toggleClass("active");
+            return false;
+        });
+        $(".btn-admin").click(function () {
+            $("#panel").fadeOut("fast");
+            $("#admin").slideToggle("slow");
+            $(this).toggleClass("active");
+            return false;
+        });
+
+    });
+</script>
+</body>
+</html>

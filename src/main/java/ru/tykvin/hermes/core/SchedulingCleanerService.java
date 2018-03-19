@@ -24,7 +24,7 @@ public class SchedulingCleanerService {
     private final FilesDao filesDao;
     private final StorageConfiguration sc;
 
-    @Scheduled(cron = "0 0 * * * *")
+    @Scheduled(cron = "0 * * * * *")
     public void removeExpired() {
         log.info("Start cleaning");
         filesDao.clearExpiredBindings();
