@@ -25,10 +25,10 @@
 //***************************************************************************************************************
 /*
 var cyr=new Array("jo","zh","i'","ch","sh","xh","je","ju","ja","a","b","v","g","d","e","z","i","k","l","m","n","o","p","r","s","t","u","f","x","c","'","y","`","j","h", "_");
-var lat=new Array("�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�"," ");
- 
+var lat=new Array("ё","ж","й","ч","ш","щ","э","ю","я","а","б","в","г","д","е","з","и","к","л","м","н","о","п","р","с","т","у","ф","х","ц","ь","ы","ъ","ж","х"," ");
+
 var cyrcap=new Array("JO","Jo","ZH","Zh","I'","Ch","CH","Sh","SH","Xh","XH","Je","JE","Ju","JU","Ja","JA","A","B","V","G","D","E","Z","I","K","L","M","N","      O","P","R","S","T","U","F","X","C","Y","J","H");
-var latcap=new Array("�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�","�      ","�","�","�","�","�","�","�");
+var latcap=new Array("Ё","Ё","Ж","Ж","Й","Ч","Ч","Ш","Ш","Щ","Щ","Э","Э","Ю","Ю","Я","Я","А","Б","В","Г","Д","Е","З","И","К","Л","М","Н","О","П","Р","С","Т      ","У","Ф","Х","Ц","Ы","Ж","Х");
 //function translate(tex)
 {
 var buf=tex;
@@ -37,27 +37,27 @@ for (i=0;i<latcap.length;i++)
         {
         buf=replace(buf,latcap[i],cyrcap[i],1,0);
         }
- 
+
 for (i=0;i<lat.length;i++)
         {
         buf=replace(buf,lat[i],cyr[i],1,0);
         }
- 
+
 tex=buf;
 return tex;
 }
- 
+
 function replace(target,oldTerm,newTerm,caseSens,wordOnly) {
- 
+
         var work = target;
         var ind = 0;
         var next = 0;
- 
+
         if (!caseSens) {
           oldTerm = oldTerm.toLowerCase();
           work = target.toLowerCase();
         }
- 
+
         while ((ind = work.indexOf(oldTerm,next)) >= 0) {
           if (wordOnly) {
             var before = ind - 1;
@@ -74,9 +74,9 @@ function replace(target,oldTerm,newTerm,caseSens,wordOnly) {
           next = ind + newTerm.length;
           if (next >= work.length) { break; }
         }
- 
+
         return target;
- 
+
 }
 
 */
@@ -176,13 +176,13 @@ var UberUpload = {
                 var file_name = UberUpload.getFileName(JQ(this).val());
                 if (file_name.length > UberUpload.max_file_name_chars) {
                     UberUpload.highlightFileLabel(JQ(this).attr("id") + "_label", UberUpload.file_label_highlight_on);
-                    UberUpload.showAlert("������, ��� ����� �� ����� ��������� ����� " + UberUpload.max_file_name_chars + " ��������.", 500, 85, UberUpload.block_ui_enabled);
+                    UberUpload.showAlert("Ошибка, имя файла не может содержать более " + UberUpload.max_file_name_chars + " символов.", 500, 85, UberUpload.block_ui_enabled);
                     found_error = true;
                 }
 
                 if (file_name.length < UberUpload.min_file_name_chars) {
                     UberUpload.highlightFileLabel(JQ(this).attr("id") + "_label", UberUpload.file_label_highlight_on);
-                    UberUpload.showAlert("������, ��� ����� �� ����� ���� ����� " + UberUpload.min_file_name_chars + " ��������.", 500, 85, UberUpload.block_ui_enabled);
+                    UberUpload.showAlert("Ошибка, имя файла не может быть менее " + UberUpload.min_file_name_chars + " символов.", 500, 85, UberUpload.block_ui_enabled);
                     found_error = true;
                 }
 
@@ -211,7 +211,7 @@ var UberUpload = {
 
                 if (!file_extension.match(UberUpload.allow_extensions)) {
                     UberUpload.highlightFileLabel(JQ(this).attr("id") + "_label", UberUpload.file_label_highlight_on);
-                    UberUpload.showAlert('��������, �� �������� ������ � ����������� "' + file_extension + '" ���������.', 500, 85, UberUpload.block_ui_enabled);
+                    UberUpload.showAlert('Извините, но передача файлов с разширением "' + file_extension + '" запрещена.', 500, 85, UberUpload.block_ui_enabled);
                     found_error = true;
                 }
             }
@@ -234,7 +234,7 @@ var UberUpload = {
 
                 if (file_extension.match(UberUpload.disallow_extensions)) {
                     UberUpload.highlightFileLabel(JQ(this).attr("id") + "_label", UberUpload.file_label_highlight_on);
-                    UberUpload.showAlert('��������, �� �������� ����� � ����������� "' + file_extension + '" �� ���������.', 500, 85, UberUpload.block_ui_enabled);
+                    UberUpload.showAlert('Извините, но передача фалов с разширением "' + file_extension + '" не разрешена.', 500, 85, UberUpload.block_ui_enabled);
                     found_error = true;
                 }
             }
@@ -258,7 +258,7 @@ var UberUpload = {
         });
 
         if (!found_file) {
-            UberUpload.showAlert("���������� �������� ���� ��� ��������.", 400, 80, UberUpload.block_ui_enabled);
+            UberUpload.showAlert("Пожалуйста выберите файл для передачи.", 400, 80, UberUpload.block_ui_enabled);
             return true;
         }
         else {
@@ -266,7 +266,7 @@ var UberUpload = {
         }
     },
     showHelpMess: function () {
-        UberUpload.showAlert('<table align = "left" border = "0"><tr><td><b><ol><li>������ ����� ��������� �� ������� 30 ����.<li>�������� ������������� �������� �� ����� 5-�� ������.<li>������ ������� ����� ��  ������ ��������� 1,5 ��.<li>� ��������� � ����������� ���������� �� ������ hermes-admin@hermitage.ru.</ol><br><br> <span style = "color:#FF0000; font-size:20px">�����:</span> �� ������� ������� ������� ����� ������ <span style = "color:#FF0000;">������</span> �� ������ �������� ����������.</td></tr></table>', 800, 200, UberUpload.block_ui_enabled);
+        UberUpload.showAlert('<table align = "left" border = "0"><tr><td><b><ol><li>Данные будут храниться на сервере 30 дней.<li>Возможна одновременная передача не более 5-ти файлов.<li>Размер каждого файла не  должен превышать 1,5 Гб.<li>С вопросами и пожеланиями обращаться по адресу hermes-admin@hermitage.ru.</ol><br><br> <span style = "color:#FF0000; font-size:20px">Важно:</span> Вы сможете увидеть таблицу Ваших файлов <span style = "color:#FF0000;">ТОЛЬКО</span> со своего рабочего компьютера.</td></tr></table>', 800, 200, UberUpload.block_ui_enabled);
     },
     // Make sure the user is not uploading duplicate files
     checkDuplicateFileCount: function () {
@@ -303,7 +303,7 @@ var UberUpload = {
         }
 
         if (found_duplicate) {
-            UberUpload.showAlert("�� ��������� ��������� 2 ��� ����� ���������� �����.", 500, 80, UberUpload.block_ui_enabled);
+            UberUpload.showAlert("Вы пытаетесь загрузить 2 или более одинаковых файла.", 500, 80, UberUpload.block_ui_enabled);
             return true;
         }
         else {
@@ -316,7 +316,7 @@ var UberUpload = {
             alert(alert_message);
         }
         else {
-            alert_message = "<br>" + alert_message + "<br><br><input style='width:75px;' type='button' id='ok_btn' name='ok' value='�������' onClick='JQ.unblockUI();'>";
+            alert_message = "<br>" + alert_message + "<br><br><input style='width:75px;' type='button' id='ok_btn' name='ok' value='Закрыть' onClick='JQ.unblockUI();'>";
 
             JQ.blockUI({
                 message: alert_message,
@@ -378,7 +378,7 @@ var UberUpload = {
 
         JQ("#ubr_alert").html("");
         JQ("#upload_container").show();
-        JQ("#reset_button").val("�������� �����");
+        JQ("#reset_button").val("Очистить форму");
         JQ(".upfile_ultimo").remove();
         JQ(".upfile").remove();
         JQ(".upfile_label").remove();
@@ -464,7 +464,7 @@ var UberUpload = {
         UberUpload.resetUploadDiv();
 
         JQ("#ubr_alert").html("");
-        JQ("#reset_button").val("��������");
+        JQ("#reset_button").val("Очистить");
         JQ(".upfile_ultimo").remove();
         JQ(".upfile").remove();
         JQ(".upfile_label").remove();
@@ -555,12 +555,12 @@ var UberUpload = {
         JQ("#upload_form_values_container").fadeOut("fast");
         JQ(".upfile_ultimo").fadeOut("fast");
         JQ("#ubr_upload_form").submit();
-        JQ("#reset_button").val("���������� ��������");
+        JQ("#reset_button").val("Остановить передачу");
         if (!debug_upload) {
             UberUpload.initializeProgressBar(upload_id, debug_ajax);
         }
         else {
-            UberUpload.showAlertMessage("��������� ������ ���������, ���������� ���������...");
+            UberUpload.showAlertMessage("Обнаружен запуск дебаггера, пожалуйста подождите...");
         }
     },
 
@@ -580,7 +580,7 @@ var UberUpload = {
         JQ("#upload_slots_container").fadeIn("fast");
         JQ("#upload_form_values_container").fadeIn("fast");
         JQ("#upload_button").show();
-        JQ("#reset_button").val("��������");
+        JQ("#reset_button").val("Очистить");
     },
 
     // Get the progress of the upload
@@ -627,7 +627,7 @@ var UberUpload = {
         UberUpload.CPB_loop = true;
 
         JQ("#progress_bar_container").fadeIn("fast");
-        UberUpload.showAlertMessage("���� �������� ������");
+        UberUpload.showAlertMessage("Идет передача данных");
         JQ("#upload_stats_container").slideDown("fast");
         if (UberUpload.show_current_position) {
             JQ("#total_kbytes").html(UberUpload.total_kbytes + " ");
@@ -795,7 +795,7 @@ var UberUpload = {
                 if (JQ(".upfile").length > 0) {
                     JQ(".upfile_ultimo").hide();
                     JQ("#upload_slots_container").show();
-                    JQ("#upload_slots_container").append('<div class=" upfile_label " id="' + JQ(".upfile_ultimo").attr("id") + '_label"><span class="upfile_name">' + UberUpload.getFileName(JQ(".upfile_ultimo").val()) + '</span><span class="upfile_remove" title="������� �� ������" onClick="UberUpload.deleteUploadSlot(\'' + JQ(".upfile_ultimo").attr("id") + '\')"><!--[x]--></span></div>');
+                    JQ("#upload_slots_container").append('<div class=" upfile_label " id="' + JQ(".upfile_ultimo").attr("id") + '_label"><span class="upfile_name">' + UberUpload.getFileName(JQ(".upfile_ultimo").val()) + '</span><span class="upfile_remove" title="Удалить из списка" onClick="UberUpload.deleteUploadSlot(\'' + JQ(".upfile_ultimo").attr("id") + '\')"><!--[x]--></span></div>');
                     //JQ("#upload_slots_container").append('<div class="upfile_label" id="' + JQ(".upfile_ultimo").attr("id") +'_label"><span class="upfile_name">' + UberUpload.getFileName(JQ(".upfile_ultimo").val()) + '</span><span class="upfile_remove" title="Remove File" onClick="UberUpload.deleteUploadSlot(\'' + JQ(".upfile_ultimo").attr("id") + '\')"></span></div>');
                 }
                 var id = new Date().getTime();
@@ -834,15 +834,15 @@ var UberUpload = {
 
 };
 
-function getBrowser() { // ���������� ������� � �� �������� ����������
+function getBrowser() { // определяем функцию и ее механизм выполнения
 
-    uaVers = '' // uaVers ����� �� ������������ � �����, ��� ���, ���������� ���������� ����������������, ����� �� ���� ������
+    uaVers = '' // uaVers может не определиться в Опере, так что, переменную приходится инициализировать, чтобы не было ошибок
     if (window.navigator.userAgent.indexOf("Chrome") >= 0) {
         ua = 'upfile_ultimo';
         uaVers = window.navigator.userAgent.substr(window.navigator.userAgent.indexOf("Opera") + 6, 4);
     }
     else if (window.navigator.userAgent.indexOf("Gecko") >= 0) // (Mozilla, Netscape, FireFox)
-    {        // �� ������ ����� ���������, ��� ��� �� ���������� � ������ ������� �������� ����� ����� � ������ � ���� �� ����������� ���������
+    {        // Их врядли стоит разделять, так как их разделение – только попытка вдохнуть новую жизнь в одного и того же вымирающего динозавра
         ua = 'Firefox';
         uaVers = window.navigator.userAgent.substr(window.navigator.userAgent.indexOf("Gecko") + 6, 8) + ' (' + window.navigator.userAgent.substr(8, 3) + ')';
     }
@@ -855,6 +855,6 @@ function getBrowser() { // ���������� ������� 
         uaVers = window.navigator.userAgent.substr(window.navigator.userAgent.indexOf("Opera") + 5, 3);
     }
     else
-        ua = 'Firefox'; // ����������� ��� ��������
+        ua = 'Firefox'; // Неизвестные мне браузеры
     return ua;
 };

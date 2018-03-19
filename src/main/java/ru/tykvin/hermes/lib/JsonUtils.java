@@ -22,7 +22,7 @@ public class JsonUtils {
                 .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
                 .configure(MapperFeature.AUTO_DETECT_FIELDS, true)
                 .configure(MapperFeature.AUTO_DETECT_SETTERS, true)
-                .setSerializationInclusion(JsonInclude.Include.NON_ABSENT)
+                .setSerializationInclusion(JsonInclude.Include.ALWAYS)
                 .registerModule(new Jdk8Module())
                 .registerModule(new JavaTimeModule());
     }

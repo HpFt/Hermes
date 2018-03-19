@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import ru.tykvin.hermes.auth.service.TokenService;
+import ru.tykvin.hermes.service.TokenService;
 import ru.tykvin.hermes.model.TokenData;
 import ru.tykvin.hermes.model.User;
 
