@@ -1,0 +1,27 @@
+#dropdown-group:hover .dropdown-menu {
+    display: block;
+}
+
+.files .del {
+    display: none;
+}
+
+.files .table tr.uploaded:hover .del {
+    display: inline-block;
+}
+
+.files .spinner-border {
+    display: none !important;
+}
+
+.files tr.uploading .spinner-border {
+    display: inline-block !important;
+}
+
+.file-field.big .file-path-wrapper {
+    height: 3.2rem;
+}
+
+.file-field.big .file-path-wrapper .file-path {
+    height: 3rem;
+}

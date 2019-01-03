@@ -8,4 +8,4 @@ api:
 storage:
   root: files
   host: http://localhost:8080
-  lifeTime: 1M
+  lifeTime: 1h
